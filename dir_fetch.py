@@ -29,17 +29,10 @@ def main(arg1):
 	pressure, lat, lon = grb.data(lat1=10, lat2=60, lon1=150, lon2=245)
 	pressure = pressure/100
 
-########COMMENTED LINES GET THE LAND SEA MASK FROM A GRIB FILE
-########THIS SHOULD BE MOVED TO ANOTHER FILE
-########THE MASK COULD THEN BE IMPORTED, AND RE-SIZED TO THE DIMENSIONS USED HERE
-#######THAT WAY, IF SOMETHING CHANGES WITH THE SHAPE OF THE MAP IT WON'T BREAK THE PROGRAM
-	#grb = grbs.select(name= 'Land-sea mask')[0]
-	#land_sea_mask, lat, lon = grb.data(lat1=10, lat2=60, lon1=150, lon2=245)
-	#land_sea_mask = np.logical_not(land_sea_mask).astype(int)
+	##Mask the pressure readings on the land
 	land_sea_mask = np.load("land_sea_mask.dat")
 	pressure = pressure * land_sea_mask
 
-	#land_sea_mask.dump("land_sea_mask.dat")
 
 	m = Basemap(projection='mill', llcrnrlat=10, urcrnrlat=60, llcrnrlon=150, urcrnrlon=245, resolution='l')
 
