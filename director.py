@@ -9,4 +9,3 @@ grib_files = listdir('/root/sci/data/gribs')
 ##generate an image from the grib file
 for f in grib_files:
 	dir_fetch.main(f)
-
