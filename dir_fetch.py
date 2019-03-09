@@ -15,26 +15,26 @@ import datetime
 import sys
 
 
-def main(arg1):
+def main(arg1, lat1, lat2, lon1, lon2, area):
 	fig=plt.figure(figsize=(20.5, 10.5))
 	grbs = pygrib.open('/root/sci/data/gribs/'+str(arg1))
 
 	grb = grbs.select(name = '10 metre U wind component')[0]
-	U, lat, lon = grb.data(lat1=10, lat2=60, lon1=150, lon2=245)
+	U, lat, lon = grb.data(lat1=lat1, lat2=lat2, lon1=lon1, lon2=lon2)
 
 	grb = grbs.select(name= '10 metre V wind component')[0]
-	V, lat, lon = grb.data(lat1=10, lat2=60, lon1=150, lon2=245)
+	V, lat, lon = grb.data(lat1=lat1, lat2=lat2, lon1=lon1, lon2=lon2)
 
 	grb = grbs.select(name= 'Surface pressure')[0]
-	pressure, lat, lon = grb.data(lat1=10, lat2=60, lon1=150, lon2=245)
+	pressure, lat, lon = grb.data(lat1=lat1, lat2=lat2, lon1=lon1, lon2=lon2)
 	pressure = pressure/100
 
 	##Mask the pressure readings on the land
-	land_sea_mask = np.load("land_sea_mask.dat")
+	land_sea_mask = np.load("/root/sci/land_sea_mask_temp_"+area+".dat")
 	pressure = pressure * land_sea_mask
 
 
-	m = Basemap(projection='mill', llcrnrlat=10, urcrnrlat=60, llcrnrlon=150, urcrnrlon=245, resolution='l')
+	m = Basemap(projection='mill', llcrnrlat=lat1, urcrnrlat=lat2, llcrnrlon=lon1, urcrnrlon=lon2, resolution='l')
 
 	###Whole section can be calculted once and stored, then loaded in
 	###Angles can be calculated more accurately using minutes and seconds
@@ -146,14 +146,14 @@ def main(arg1):
 	points = np.meshgrid(yy, xx)
 
 	l = np.arange(950, 1030, 2)
-	m.contour(x, y, pressure, l)
+	m.contour(x, y, pressure, l, corner_mask=1)
 	m.contourf(x, y, magnitude, [20,25,30,35,40,45,50,55,60,65,70])
 	m.quiver(x[points], y[points], U[points], V[points])
 
 	m.colorbar(pad = .7)
 
-	m.drawparallels(np.arange(10, 60, 5), labels=[1,1,0.0])
-	m.drawmeridians(np.arange(150, 245, 5), labels=[0,0,0,1])
+	m.drawparallels(np.arange(lat1, lat2, 5), labels=[1,1,0.0])
+	m.drawmeridians(np.arange(lon1, lon2, 5), labels=[0,0,0,1])
 	m.drawcountries()
 	m.drawstates()
 	m.drawcoastlines()
@@ -169,10 +169,10 @@ def main(arg1):
 	title = title.split(':')
 	plt.title(title[1][0:7] + ' wind,  '+title[6]+' '+ title[7][:-4] +',  compiled on ' + now.strftime("%b %d %H:%M") + ' UTC')
 	##
-	fig1.savefig('/var/www/html/images/surface_pressure'+title[6][10:11]+'.png', dpi=80)
+	fig1.savefig('/var/www/html/images/' + area + 'surface_pressure'+title[6][10:11]+'.png', dpi=80)
 
 	print "png saved at /var/www/html/images/ at " + str(datetime.datetime.now())
 
 
 if __name__ == "__main__":
-	main(sys.argv[1])
+	main(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[6])
