@@ -49,12 +49,8 @@ def main(arg1, lat1, lat2, lon1, lon2, area):
 	get_swell_angles(32, 243, 28.5, 360-170, X, C, '280')
 	get_swell_angles(32, 243, 20.65, 360-170, X, C, '270')
 	get_swell_angles(32, 243, 11.9, 360-170, X, C, '260')
-
-
-	#lats, lons = gc.gc(32, 243, 35.75, 360-170)##290 degrees add label
-	#l, o = m(lons, lats)
-	#m.plot(l, o, linewidth=2, color=C)
-	#plt.text(l[X-1], o[X-5], '290', size=13, color=C, rotation=0)
+	###angles for the SPAC, doesn't work
+	get_swell_angles(32, 243, -20, 360-170, X, C, '???')
 
 
 	##Get swell distance lines and plot them
@@ -65,12 +61,6 @@ def main(arg1, lat1, lat2, lon1, lon2, area):
 	get_swell_distance(P, C, '3')
 	get_swell_distance(P, C, '2')
 	get_swell_distance(P, C, '1')
-	#d = gc.get_period_distance(P, 5)
-	#dis_lats, dis_lons = gc.get_distance_points(gc.LATS, gc.LONS, d)
-	#l, o = m(dis_lons, dis_lats)
-	#m.plot(l, o, linewidth=2, color=C)
-	#plt.text(l[0], o[0]+40000, '5', size=15, color=C, rotation=0)
-	#plt.text(l[len(l)-1], o[len(o)-1]-150000, '5', size=15, color=C, rotation=0)
 
 
 	#magnitude = (U**2 + V**2)**0.5
@@ -145,7 +135,7 @@ def get_swell_angles(lat1, lon1, lat2, lon2, X, C, label):
         plt.text(l[X], o[X+2]+20000, label, size=13, color=C, rotation=0)
 
 def get_swell_distance(P, C, num_days):
-	d = gc.get_period_distance(P, 5)
+	d = gc.get_period_distance(P, int(num_days))##Fix this
 	dis_lats, dis_lons = gc.get_distance_points(gc.LATS, gc.LONS, d)
         l, o = m(dis_lons, dis_lats)
         m.plot(l, o, linewidth=2, color=C)
