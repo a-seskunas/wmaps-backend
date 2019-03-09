@@ -32,8 +32,9 @@ def main(arg1, lat1, lat2, lon1, lon2, area):
 	##Mask the pressure readings on the land
 	land_sea_mask = np.load("/root/sci/land_sea_mask_temp_"+area+".dat")
 	pressure = pressure * land_sea_mask
-
-
+	
+	###Fix this by passsing the object into the get_swell_angles and get_swell_distance functions??
+	global m
 	m = Basemap(projection='mill', llcrnrlat=lat1, urcrnrlat=lat2, llcrnrlon=lon1, urcrnrlon=lon2, resolution='l')
 
 	###Whole section can be calculted once and stored, then loaded in
@@ -42,76 +43,35 @@ def main(arg1, lat1, lat2, lon1, lon2, area):
 	X = 58
 	C = 'grey'
 
+	get_swell_angles(32, 243, 49.4, 360-170, X, C, '310')
+	get_swell_angles(32, 243, 43, 360-170, X, C, '300')
+	get_swell_angles(32, 243, 35.75, 360-170, X, C, '290')
+	get_swell_angles(32, 243, 28.5, 360-170, X, C, '280')
+	get_swell_angles(32, 243, 20.65, 360-170, X, C, '270')
+	get_swell_angles(32, 243, 11.9, 360-170, X, C, '260')
 
-	lats, lons = gc.gc(32, 243, 49.4, 360-170)##310 degrees, add label
-	l, o = m(lons, lats)
-	m.plot(l, o, linewidth=2, color=C, label="310")
-	plt.text(l[X], o[X+2]+20000, '310', size=13, color=C, rotation=0)
 
-	lats, lons = gc.gc(32, 243, 43, 360-170)##300 degrees add label
-	l, o = m(lons, lats)
-	m.plot(l, o, linewidth=2, color=C)
-	plt.text(l[X], o[X+1]+40000, '300', size=13, color=C, rotation=0)
+	#lats, lons = gc.gc(32, 243, 35.75, 360-170)##290 degrees add label
+	#l, o = m(lons, lats)
+	#m.plot(l, o, linewidth=2, color=C)
+	#plt.text(l[X-1], o[X-5], '290', size=13, color=C, rotation=0)
 
-	lats, lons = gc.gc(32, 243, 35.75, 360-170)##290 degrees add label
-	l, o = m(lons, lats)
-	m.plot(l, o, linewidth=2, color=C)
-	plt.text(l[X-1], o[X-5], '290', size=13, color=C, rotation=0)
-
-	lats, lons = gc.gc(32, 243, 28.5, 360-170)##280 degrees add label
-	l, o = m(lons, lats)
-	m.plot(l, o, linewidth=2, color=C)
-	plt.text(l[X-2], o[X+3], '280', size=13, color=C, rotation=0)
-
-	lats, lons = gc.gc(32, 243, 20.65, 360-170)##270 degrees add label
-	l, o = m(lons, lats)
-	m.plot(l, o, linewidth=2, color=C)
-	plt.text(l[X-3], o[X+2], '270', size=13, color=C, rotation=0)
-
-	lats, lons = gc.gc(32, 243, 11.9, 360-170)##260 degrees add label
-	l, o = m(lons, lats)
-	m.plot(l, o, linewidth=2, color=C)
-	plt.text(l[X-4], o[X], '260', size=13, color=C, rotation=0)
 
 	##Get swell distance lines and plot them
 	P = 16
+	
+	get_swell_distance(P, C, '5')
+	get_swell_distance(P, C, '4')
+	get_swell_distance(P, C, '3')
+	get_swell_distance(P, C, '2')
+	get_swell_distance(P, C, '1')
+	#d = gc.get_period_distance(P, 5)
+	#dis_lats, dis_lons = gc.get_distance_points(gc.LATS, gc.LONS, d)
+	#l, o = m(dis_lons, dis_lats)
+	#m.plot(l, o, linewidth=2, color=C)
+	#plt.text(l[0], o[0]+40000, '5', size=15, color=C, rotation=0)
+	#plt.text(l[len(l)-1], o[len(o)-1]-150000, '5', size=15, color=C, rotation=0)
 
-	d = gc.get_period_distance(P, 5)
-
-	dis_lats, dis_lons = gc.get_distance_points(gc.LATS, gc.LONS, d)
-	l, o = m(dis_lons, dis_lats)
-	m.plot(l, o, linewidth=2, color=C)
-	plt.text(l[0], o[0]+40000, '5', size=15, color=C, rotation=0)
-	plt.text(l[len(l)-1], o[len(o)-1]-150000, '5', size=15, color=C, rotation=0)
-
-
-	d = gc.get_period_distance(P, 4)
-	dis_lats, dis_lons = gc.get_distance_points(gc.LATS, gc.LONS, d)
-	l, o = m(dis_lons, dis_lats)
-	m.plot(l, o, linewidth=2, color=C)
-	plt.text(l[0], o[0]+40000, '4', size=15, color=C, rotation=.2)
-	plt.text(l[len(l)-1], o[len(o)-1]-150000, '4', size=15, color=C, rotation=.2)
-
-	d = gc.get_period_distance(P, 3)
-	dis_lats, dis_lons = gc.get_distance_points(gc.LATS, gc.LONS, d)
-	l, o = m(dis_lons, dis_lats)
-	m.plot(l, o, linewidth=2, color=C)
-	plt.text(l[0], o[0]+40000, '3', size=15, color=C, rotation=.2)
-	plt.text(l[len(l)-1], o[len(o)-1]-150000, '3', size=15, color=C, rotation=.2)
-
-	d = gc.get_period_distance(P, 2)
-	dis_lats, dis_lons = gc.get_distance_points(gc.LATS, gc.LONS, d)
-	l, o = m(dis_lons, dis_lats)
-	m.plot(l, o, linewidth=2, color=C)
-	plt.text(l[0], o[0]+40000, '2', size=15, color=C, rotation=.2)
-	plt.text(l[len(l)-1], o[len(o)-1]-150000, '2', size=15, color=C, rotation=.2)
-
-	d = gc.get_period_distance(P, 1)
-	dis_lats, dis_lons = gc.get_distance_points(gc.LATS, gc.LONS, d)
-	l, o = m(dis_lons, dis_lats)
-	m.plot(l, o, linewidth=2, color=C)
-	plt.text(l[0], o[0]+40000, '1', size=15, color=C, rotation=.2)
-	plt.text(l[len(l)-1], o[len(o)-1]-150000, '1', size=15, color=C, rotation=.2)
 
 	#magnitude = (U**2 + V**2)**0.5
 	magnitude = (U**2 + V**2)**0.5 * 1.944 # convert U,V components to speed in knots
@@ -176,3 +136,18 @@ def main(arg1, lat1, lat2, lon1, lon2, area):
 
 if __name__ == "__main__":
 	main(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[6])
+
+
+def get_swell_angles(lat1, lon1, lat2, lon2, X, C, label):
+	lats, lons = gc.gc(lat1, lon1, lat2, lon2)
+	l, o = m(lons, lats)
+        m.plot(l, o, linewidth=2, color=C, label=label)
+        plt.text(l[X], o[X+2]+20000, label, size=13, color=C, rotation=0)
+
+def get_swell_distance(P, C, num_days):
+	d = gc.get_period_distance(P, 5)
+	dis_lats, dis_lons = gc.get_distance_points(gc.LATS, gc.LONS, d)
+        l, o = m(dis_lons, dis_lats)
+        m.plot(l, o, linewidth=2, color=C)
+        plt.text(l[0], o[0]+40000, num_days, size=15, color=C, rotation=0)
+        plt.text(l[len(l)-1], o[len(o)-1]-150000, num_days, size=15, color=C, rotation=0)
