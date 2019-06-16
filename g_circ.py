@@ -31,7 +31,8 @@ def gc(lat1, lon1, lat2, lon2, num_points=500):
 	lats = []
 	lons = []
 	for p in points:
-		if p[0] > 0 and p[0] < 99:
+	#	if p[0] > 0 and p[0] < 99:
+		if p[0] > -99 and p[0] < 99:
 			lats.append(p[0])
 			if p[1] < 0:
 				lons.append(p[1]+360)
@@ -103,5 +104,3 @@ def get_g_circ_angle(latA, lonA, latB, lonB):
 	theta = (m.degrees(t) +360) % 360
 	return theta
 
-t = get_g_circ_angle(32, 360-117, 16.5, 360-170)
-print t

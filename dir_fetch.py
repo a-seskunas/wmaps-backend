@@ -49,10 +49,14 @@ def main(arg1, lat1, lat2, lon1, lon2, area):
 	get_swell_angles(32, 243, 28.5, 360-170, X, C, '280')
 	get_swell_angles(32, 243, 20.65, 360-170, X, C, '270')
 	get_swell_angles(32, 243, 11.9, 360-170, X, C, '260')
-	###angles for the SPAC, doesn't work
-	get_swell_angles(32, 243, -20, 360-170, X, C, '???')
-
-
+	###angles for the SPAC
+	get_swell_angles(32, 243, 12, 360-133, X, C, '220')
+	get_swell_angles(32, 243, 2, 360-133, X, C, '210')
+	get_swell_angles(32, 243, -10, 360-131, X, C, '200')
+	get_swell_angles(32, 243, -11, 360-124, X, C, '190')
+	get_swell_angles(32, 243, -12, 360-117, X, C, '180')
+	get_swell_angles(32, 243, -11, 360-110, X, C, '170')
+	get_swell_angles(32, 243, -13, 360-102, X, C, '160')
 	##Get swell distance lines and plot them
 	P = 16
 	
@@ -96,14 +100,15 @@ def main(arg1, lat1, lat2, lon1, lon2, area):
 	points = np.meshgrid(yy, xx)
 
 	l = np.arange(950, 1030, 2)
-	m.contour(x, y, pressure, l, corner_mask=1)
+	cs = m.contour(x, y, pressure, l, corner_mask=1)
+	plt.clabel(cs, inline=True, fmt='%1.0f', fontsize=12, colors='k')
 	m.contourf(x, y, magnitude, [20,25,30,35,40,45,50,55,60,65,70])
 	m.quiver(x[points], y[points], U[points], V[points])
 
 	m.colorbar(pad = .7)
 
-	m.drawparallels(np.arange(lat1, lat2, 5), labels=[1,1,0.0])
-	m.drawmeridians(np.arange(lon1, lon2, 5), labels=[0,0,0,1])
+	m.drawparallels(np.arange(lat1, lat2, 5), labels=[1,1,0.0], dashes=[1,3])
+	m.drawmeridians(np.arange(lon1, lon2, 5), labels=[0,0,0,1], dashes=[1,3])
 	m.drawcountries()
 	m.drawstates()
 	m.drawcoastlines()
@@ -129,12 +134,16 @@ if __name__ == "__main__":
 
 
 def get_swell_angles(lat1, lon1, lat2, lon2, X, C, label):
+	#uses the great circle(gc) function to plot the swell angle lines
+###Fix the labels for the South Pacific, maybe set a flag for South and North
 	lats, lons = gc.gc(lat1, lon1, lat2, lon2)
+	lons, lats = m.shiftdata(lons, lats)
 	l, o = m(lons, lats)
         m.plot(l, o, linewidth=2, color=C, label=label)
         plt.text(l[X], o[X+2]+20000, label, size=13, color=C, rotation=0)
 
 def get_swell_distance(P, C, num_days):
+	#uses the great circle(gc) function to plot the swell distance lines
 	d = gc.get_period_distance(P, int(num_days))##Fix this
 	dis_lats, dis_lons = gc.get_distance_points(gc.LATS, gc.LONS, d)
         l, o = m(dis_lons, dis_lats)
