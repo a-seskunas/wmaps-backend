@@ -113,12 +113,3 @@ def get_g_circ_angle(latA, lonA, latB, lonB):
 	theta = (np.degrees(t) +360) % 360
 	return theta
 
-#Bearing from A to B along the great circle path
-#Output is 0 for North, 90 is east, 180 is south, 270(or -90) is west
-def get_g_circ_bearing(latA, lonA, latB, lonB):
-	latA, lonA, latB, lonB = np.radians(latA), np.radians(lonA), np.radians(latB), np.radians(lonB)
-	S = np.cos(latB) * np.sin((lonA - lonB))
-	C = np.cos(latA) * np.sin(latB) - np.sin(latA)*np.cos(latB)*np.cos((lonA-lonB))
-	beta = np.arctan2(S,C)
-	#return np.degrees(beta)
-	return (np.degrees(beta) + 360) % 360
