@@ -1,0 +1,10 @@
+*.log
+**/gribs
+*.pyc
+basemaps/
+db/
+*~
+data/dats/
+data/sample_gribs/
+*_bk.py
+*.txt
