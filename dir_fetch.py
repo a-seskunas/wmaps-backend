@@ -204,21 +204,3 @@ if __name__ == "__main__":
     main(*sys.argv)
 
 
-def draw_swell_lines(lats, lons, X, C, label):
-    plt.plot(
-        lons, lats, transform=ccrs.PlateCarree(), zorder=2, color="grey", linewidth=1
-    )
-
-
-def get_swell_distance(P, C, num_days, lats, lons, home_lat, home_lon, ax):
-    """uses the great circle(gc) function to plot the swell distance lines"""
-    d = gc.get_period_distance(P, int(num_days))
-    dis_lats, dis_lons = gc.get_distance_points(lats, lons, d, home_lat, home_lon)
-    plt.plot(
-        dis_lons,
-        dis_lats,
-        transform=ccrs.PlateCarree(),
-        zorder=2,
-        color="grey",
-        linewidth=1,
-    )
