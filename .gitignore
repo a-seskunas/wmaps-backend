@@ -8,3 +8,4 @@ data/dats/
 data/sample_gribs/
 *_bk.py
 *.txt
+test/.cache/
