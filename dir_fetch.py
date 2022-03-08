@@ -3,23 +3,22 @@ import cartopy.feature as cfeature
 import cartopy.mpl.ticker as cticker
 import numpy as np
 
-# To save file without a $DISPLAY error
-import matplotlib as mpl
-mpl.use("Agg")
+import matplotlib as matplotlib
+# Use Agg so we can save the map without a display
+matplotlib.use("Agg")
+
 import pygrib
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
-from math import *
+import math as math
 import g_circ as gc
 import datetime
-import sys
-from land_sea_mask import get_land_sea_mask
 import draw_lines as dc
 import image_to_db as to_db
 import sqlite3
 import pickle
 
-import time
+
 
 
 def main(
@@ -39,26 +38,26 @@ def main(
     thin_out,
 ):
 
-    infile = open("/home/adam/sci/basemaps/" + home_name + "_base.pkl", "rb")
-    ax = pickle.load(infile)
-    infile.close()
+
+
+    with open("/home/adam/sci/basemaps/" + home_name + "_base.pkl", "rb") as infile:
+        ax = pickle.load(infile)
 
     grbs = pygrib.open("/home/adam/sci/data/gribs/" + str(file_name))
 
     grb = grbs.select(name="10 metre U wind component")[0]
-    U, lat, lon = grb.data(lat1=lat1, lat2=lat2, lon1=lon1, lon2=lon2 + 5)
+    U, lat, lon = grb.data(lat1, lat2, lon1, lon2 + 5)
 
     grb = grbs.select(name="10 metre V wind component")[0]
-    V, lat, lon = grb.data(lat1=lat1, lat2=lat2, lon1=lon1, lon2=lon2 + 5)
+    V, lat, lon = grb.data(lat1, lat2, lon1, lon2 + 5)
 
-    # grb = grbs.select(name= 'MSLP (Eta model reduction)')[0]
     grb = grbs.message(1)
-    pressure, lat, lon = grb.data(lat1=lat1, lat2=lat2, lon1=lon1, lon2=lon2 + 5)
+    pressure, lat, lon = grb.data(lat1, lat2, lon1, lon2 + 5)
     pressure = pressure / 100
 
     X = 30
     C = "grey"
-    circle_length = radians(lon2 - lon1)
+    circle_length = math.radians(lon2 - lon1)
 
     gcs, angles = dc.draw_lines(
         [home_lat, home_lon], angle_start, angle_stop, circle_length
@@ -67,9 +66,9 @@ def main(
     magnitude = (
         U**2 + V**2
     ) ** 0.5 * 1.944  # convert U,V components to speed in knots
-    # CALCULATE VECTOR DIRECTIONS HERE, THEN USE THEM TO FILTER BELOW
+
+    # Calculate the vector directions that point toward the home lat/lon
     HOME = [home_lat, home_lon]
-    # home_vectors = np.zeros(np.shape(lat))
     home_lats = np.ones(np.shape(lat))
     home_lons = np.ones(np.shape(lon))
 
@@ -77,17 +76,16 @@ def main(
     home_lons = home_lons * HOME[1]
 
     home_vectors = gc.get_g_circ_bearing(home_lats, 360 - home_lons, lat, 360 - lon)
-    # home_vectors = home_vectors - 180
 
     # Convert U and V wind components to wind direction
     wind_dir = 90.0 - (
-        np.arctan2((V / magnitude), (U / magnitude)) * 180.0 / pi + 180.0
+        np.arctan2((V / magnitude), (U / magnitude)) * 180.0 / math.pi + 180.0
     )
-    # Get rid of negative wind directions, better way to do this?  Should it happen anyway?
+    # Get rid of negative wind directions.
     wind_dir[wind_dir < 0] = 360 + wind_dir[wind_dir < 0]
 
     # strip out any wind vectors that are pointing in the wrong direction
-    # i.e. we only want to view vectors pointing towards the west coast
+    # i.e. we only want to view vectors pointing towards the home lat/lon
     msk = abs(home_vectors - wind_dir) > 40
     U[msk] = None
     V[msk] = None
@@ -100,7 +98,7 @@ def main(
     magnitude[wind_msk] = None
 
     ############################
-    # Thin out data points for wind arrows
+    # Thin out data points for wind arrows if needed
     if thin_out:
         yy = np.arange(0, lon.shape[0], 1)
         xx = np.arange(0, lat.shape[1], 1)
@@ -112,7 +110,7 @@ def main(
     points = np.meshgrid(yy, xx)
     points = tuple(
         points
-    )  # fix future warning from cartopy.ax.contourf(ploting wind arrows)
+    )  
 
     wind_levels = np.arange(wind_thresh - 5, wind_thresh + 50, 5)
 
@@ -169,7 +167,7 @@ def main(
         pad_inches=0.3,
         bbox_inches="tight",
     )
-    # save the 00Z image in the past images folder for long term storage
+    # save 00Z image in the past images folder for long term storage
     if forecast_hour == "0":
         path_to_past_image = (
             "/var/www/html/images/past_images/"
@@ -178,9 +176,8 @@ def main(
             + ".png"
         )
         fig1.savefig(path_to_past_image, dpi=60, pad_inches=0.3, bbox_inches="tight")
-        print("past image saved at " + path_to_past_image)
 
-        # add the path to the image to the database
+        # add path to the image to the database
         conn = sqlite3.connect("/home/adam/sci/db/image_paths.db")
         with conn:
             im_name = home_name + now.strftime("%Y-%m-%d_%H") + ".png"
@@ -192,7 +189,6 @@ def main(
                 im_name,
             )
             image_id = to_db.create_image(conn, image)
-            print(image_id)
     plt.close("all")
     print(
         "png saved at /var/www/html/images/ at "
