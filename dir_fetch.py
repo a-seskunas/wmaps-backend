@@ -23,7 +23,7 @@ import time
 
 
 def main(
-    arg1,
+    file_name,
     lat1,
     lat2,
     lon1,
@@ -43,7 +43,7 @@ def main(
     ax = pickle.load(infile)
     infile.close()
 
-    grbs = pygrib.open("/home/adam/sci/data/gribs/" + str(arg1))
+    grbs = pygrib.open("/home/adam/sci/data/gribs/" + str(file_name))
 
     grb = grbs.select(name="10 metre U wind component")[0]
     U, lat, lon = grb.data(lat1=lat1, lat2=lat2, lon1=lon1, lon2=lon2 + 5)
