@@ -13,7 +13,6 @@ import matplotlib.ticker as mticker
 import math as math
 import g_circ as gc
 import datetime
-import draw_lines as dc
 import image_to_db as to_db
 import sqlite3
 import pickle
@@ -59,7 +58,7 @@ def main(
     C = "grey"
     circle_length = math.radians(lon2 - lon1)
 
-    gcs, angles = dc.draw_lines(
+    gcs, angles = gc.draw_lines(
         [home_lat, home_lon], angle_start, angle_stop, circle_length
     )
 

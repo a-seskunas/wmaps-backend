@@ -2,6 +2,18 @@ import math as m
 import numpy as np
 
 
+def draw_lines(home, angle_start, angle_stop, circle_length):
+	angles = np.arange(angle_start, angle_stop+10, 10)
+	great_circles = []
+
+	for angle in angles:
+		d_p = destination_point(home[0], home[1], angle)
+		great_circles.append(gc(home[0], home[1], d_p[0], d_p[1], circle_length))
+
+	great_circles = np.array(great_circles)
+
+	return great_circles, angles
+    
 def destination_point(lat, lon, start_angle, angular_distance=m.pi/4):
 	angle = m.radians(start_angle)
 	N = (0,0,1)
