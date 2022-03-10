@@ -1,15 +1,29 @@
-#!/usr/bin/python
+## Gets grib files via get_data for each forecast hour.
+
+## Needs to be run with a model run argument from the command line.
+## The get_data file has the https call and the saves the grib
+## file to the appropriate place.
 
 import get_data as Get_Data
-import datetime
-import time
+from datetime import datetime
+from time import sleep
+import argparse
 
+def main():
+    timestamp = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
+    forecast_hours = ["000", "012", "024", "036", "048", "060", "072", "096", "120"]
 
-date = datetime.date.today()
-datestring = (date.strftime('%Y%m%d'))
+    datestring = datetime.today().strftime("%Y%m%d")
 
-for num_runs in range(9):
-	times = ["000", "012", "024", "036", "048", "060", "072", "096", "120"]
-	Get_Data.get_data_https(datestring, "00", times[num_runs])
-	print('Got ' + times[num_runs] +'Z grib at ' + str(datetime.datetime.now()))
-	time.sleep(60)
+    ## Set up command line argument for the model run hour
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-Z', type=str, help="Model run hour, i.e. 00 or 12")
+    args = parser.parse_args()
+
+    for hour in forecast_hours:
+        Get_Data.get_data_https(datestring, args.Z, hour)
+        print("Got " + hour + "Z grib at " + timestamp)
+        sleep(60)
+
+if __name__ == "__main__":
+    main()
