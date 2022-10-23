@@ -38,10 +38,11 @@ def main(
 ):
 
 
-
+    #Load pre-made basemaps
     with open("/home/adam/sci/basemaps/" + home_name + "_base.pkl", "rb") as infile:
         ax = pickle.load(infile)
 
+    #The grib files contain the weather data to be plotted
     grbs = pygrib.open("/home/adam/sci/data/gribs/" + str(file_name))
 
     grb = grbs.select(name="10 metre U wind component")[0]
@@ -143,6 +144,7 @@ def main(
     # Get title for chart
     grbs.seek(0)
     title = str(grbs.read(1)[0])
+    #For Logging
     print(title)
     title = title.split(":")
     plt.title(
@@ -153,7 +155,7 @@ def main(
         + now.strftime("%b %d %H:%M")
         + " UTC"
     )
-    # fig1.tight_layout()
+    #fig1.tight_layout()
     forecast_hour = title[6][10:13].rstrip("h")
     forecast_hour = forecast_hour.strip()
     fig1.savefig(
