@@ -9,3 +9,4 @@ data/sample_gribs/
 *_bk.py
 *.txt
 test/.cache/
+config.py

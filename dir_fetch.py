@@ -16,6 +16,7 @@ import datetime
 import db.image_to_db as to_db
 import sqlite3
 import pickle
+import config
 
 
 
@@ -39,11 +40,11 @@ def main(
 
 
     #Load pre-made basemaps
-    with open("/home/adam/sci/basemaps/" + home_name + "_base.pkl", "rb") as infile:
+    with open(config.home_path + "/sci/basemaps/" + home_name + "_base.pkl", "rb") as infile:
         ax = pickle.load(infile)
 
     #The grib files contain the weather data to be plotted
-    grbs = pygrib.open("/home/adam/sci/data/gribs/" + str(file_name))
+    grbs = pygrib.open(config.home_path + "/sci/data/gribs/" + str(file_name))
 
     grb = grbs.select(name="10 metre U wind component")[0]
     U, lat, lon = grb.data(lat1, lat2, lon1, lon2 + 5)
@@ -159,7 +160,8 @@ def main(
     forecast_hour = title[6][10:13].rstrip("h")
     forecast_hour = forecast_hour.strip()
     fig1.savefig(
-        "/var/www/html/images/"
+        config.image_home
+        + "/"
         + home_name
         + "surface_pressure"
         + forecast_hour
@@ -171,7 +173,7 @@ def main(
     # save 00Z image in the past images folder for long term storage
     if forecast_hour == "0":
         path_to_past_image = (
-            "/var/www/html/images/past_images/"
+            config.image_home + "/past_images/"
             + home_name
             + now.strftime("%Y-%m-%d_%H")
             + ".png"
@@ -179,7 +181,7 @@ def main(
         fig1.savefig(path_to_past_image, dpi=60, pad_inches=0.3, bbox_inches="tight")
 
         # add path to the image to the database
-        conn = sqlite3.connect("/home/adam/sci/db/image_paths.db")
+        conn = sqlite3.connect(config.home_path + config.db_path)
         with conn:
             im_name = home_name + now.strftime("%Y-%m-%d_%H") + ".png"
             image = (
@@ -192,7 +194,7 @@ def main(
             image_id = to_db.create_image(conn, image)
     plt.close("all")
     print(
-        "png saved at /var/www/html/images/ at "
+        "png saved at "
         + "{0:%Y-%m-%d %H:%M:%S}".format(datetime.datetime.now())
     )
 
