@@ -1,4 +1,5 @@
 from urllib.request import urlopen
+import config as config
 
 
 def get_data_https(DATE, HOUR="00", FORECAST_HOUR="000"):
@@ -16,7 +17,7 @@ def get_data_https(DATE, HOUR="00", FORECAST_HOUR="000"):
     )
 
     response = urlopen(url)
-    fh = open("/home/adam/sci/data/gribs/stuff" + FORECAST_HOUR + ".grb2", "wb")
+    fh = open(config.home_path + "/sci/data/gribs/stuff" + FORECAST_HOUR + ".grb2", "wb")
     fh.write(response.read())
     fh.close()
 
@@ -30,6 +31,6 @@ def get_sample_data_https(DATE, HOUR="00", FORECAST_HOUR="000"):
     )
     print(url)
     response = urlopen(url)
-    fh = open("/home/adam/sci/data/sample_gribs/stuff" + FORECAST_HOUR + ".grb2", "wb")
+    fh = open(config.home_path + "/sci/data/sample_gribs/stuff" + FORECAST_HOUR + ".grb2", "wb")
     fh.write(response.read())
     fh.close()
