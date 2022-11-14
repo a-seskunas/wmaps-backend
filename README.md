@@ -23,7 +23,7 @@ There's plenty of resources on the internet to get wind forecast information.  M
 Lets look at an example map.   
 ![](https://github.com/a-seskunas/wmaps-backend/blob/main/examples/fetch-example.png?raw=true)    
 
-We've got a good looking fetch circled in red here.  Note the direction of the arrows, pointing in the general direction of the West Coast of America, where we're located.  Also note that the wind data is filtered to show only wind that is traveling towards the maps destination.     
+We've got a good looking fetch circled in red here.  Note the direction of the arrows, pointing roughly at the West Coast of America, where the maps destination is located.  Also note that the wind data is filtered to show only wind that is traveling towards the maps destination.     
 
 So now we have a fetch of wind pointing in the correct direction to give us some swell at our destination, which is, in this case San Diego, CA.  The next piece of information a wmap gives us is roughly how many days until a swell from a given fetch will arrive.
 
