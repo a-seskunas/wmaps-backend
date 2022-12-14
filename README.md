@@ -6,7 +6,7 @@ Wmaps is a Python application that produces maps to show the directed wind fetch
 
 ## Motivation
 
-There's plenty of resources on the internet to get wind forecast information.  Most of it is derived from the GFS weather model.  The problem with all of the GFS derived wind maps that I've seen, is that they show too much information to be easily useful for a swell forecast. So I decided to make my own maps, using the publicly available data from the GFS weather model. Using a wmaps forecast map, you can quickly determine if there's going to be a swell for a given location.
+There's plenty of resources on the internet to get wind forecast information.  Most of it is derived from the GFS weather model.  The problem with most GFS derived wind maps is information overload. Put another way, they show too much information to be easily useful for a swell forecast. Wmaps came about in response to the problem of information overload. Using a wmaps forecast map, you can quickly determine if there's going to be ocean waves heading in your direction for a given location.
 
 
 ## Description
@@ -23,9 +23,9 @@ There's plenty of resources on the internet to get wind forecast information.  M
 Lets look at an example map.   
 ![](https://github.com/a-seskunas/wmaps-backend/blob/main/examples/fetch-example.png?raw=true)    
 
-We've got a good looking fetch circled in red here.  Note the direction of the arrows, pointing roughly at the West Coast of America, where the maps destination is located.  Also note that the wind data is filtered to show only wind that is traveling towards the maps destination.     
+There's a good looking fetch circled in red in the map above.  Note the direction of the arrows, pointing roughly at the West Coast of America, where the maps destination is located.  Also note that the wind data is filtered to show only wind that is traveling towards the maps destination.     
 
-So now we have a fetch of wind pointing in the correct direction to give us some swell at our destination, which is, in this case San Diego, CA.  The next piece of information a wmap gives us is roughly how many days until a swell from a given fetch will arrive.
+So now we've estabished the fact that a fetch of wind is pointing in the correct direction to give us some ocean swell at our destination, which is, in this case San Diego, CA.  The next piece of information a wmap gives us is roughly how many days until a swell from a given fetch will arrive.
 
 ![](https://github.com/a-seskunas/wmaps-backend/blob/main/examples/days-example.png?raw=true)
 
